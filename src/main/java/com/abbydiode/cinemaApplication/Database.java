@@ -64,5 +64,19 @@ public class Database {
 
         insertRoom(new Room());
         insertRoom(new Room());
+
+        insertMovie(new Movie("No Mercy"));
+        insertMovie(new Movie("Crash Course"));
+        insertMovie(new Movie("Death Toll"));
+        insertMovie(new Movie("Dead Air"));
+        insertMovie(new Movie("Blood Harvest"));
+        insertMovie(new Movie("The Sacrifice"));
+        insertMovie(new Movie("The Last Stand"));
+        insertMovie(new Movie("Dead Center"));
+        insertMovie(new Movie("The Passing"));
+        insertMovie(new Movie("Dark Carnival"));
+        insertMovie(new Movie("Swamp Fever"));
+        insertMovie(new Movie("Hard Rain"));
+        insertMovie(new Movie("The Parish"));
     }
 }
