@@ -18,6 +18,10 @@ public class Database {
         return users;
     }
 
+    public User getUserByName(String name) {
+        return users.stream().filter(user -> user.getName() == name).findFirst().orElse(null);
+    }
+
     public void deleteUser(User user) {
         users.remove(user);
     }
@@ -58,7 +62,7 @@ public class Database {
         rooms.remove(room);
     }
 
-    public void InitializeDatabase() {
+    public void initializeDatabase() {
         insertUser(new User("user", "user", UserType.USER));
         insertUser(new User("admin", "admin", UserType.ADMINISTRATOR));
 
