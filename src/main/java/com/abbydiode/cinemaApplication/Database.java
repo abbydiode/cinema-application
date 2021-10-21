@@ -19,7 +19,7 @@ public class Database {
     }
 
     public User getUserByName(String name) {
-        return users.stream().filter(user -> user.getName() == name).findFirst().orElse(null);
+        return users.stream().filter(user -> user.getName().equals(name)).findFirst().orElse(null);
     }
 
     public void deleteUser(User user) {

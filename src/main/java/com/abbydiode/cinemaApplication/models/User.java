@@ -30,6 +30,6 @@ public class User {
      * @return True if the password is equal to this user's password, otherwise false
      */
     public boolean isPasswordEqualTo(String password) {
-        return this.password == password;
+        return this.password.equals(password);
     }
 }
