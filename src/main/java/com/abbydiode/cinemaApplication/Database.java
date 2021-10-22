@@ -2,7 +2,10 @@ package com.abbydiode.cinemaApplication;
 
 import com.abbydiode.cinemaApplication.models.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Database {
     private ArrayList<User> users = new ArrayList<User>();
@@ -63,6 +66,8 @@ public class Database {
     }
 
     public void initializeDatabase() {
+        Random random = new Random();
+
         insertUser(new User("user", "user", UserType.USER));
         insertUser(new User("admin", "admin", UserType.ADMINISTRATOR));
 
@@ -82,5 +87,14 @@ public class Database {
         insertMovie(new Movie("Swamp Fever"));
         insertMovie(new Movie("Hard Rain"));
         insertMovie(new Movie("The Parish"));
+
+        for (int i = 0; i < movies.size(); i++) {
+            LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1630454400 + random.nextInt(2678400), 0, ZoneOffset.UTC);
+            if (i % 2 == 1) {
+                rooms.get(0).insertShowing(new Showing(movies.get(i), dateTime, 60, 100, 10.00));
+            } else {
+                rooms.get(1).insertShowing(new Showing(movies.get(i), dateTime, 120, 200, 20.00));
+            }
+        }
     }
 }

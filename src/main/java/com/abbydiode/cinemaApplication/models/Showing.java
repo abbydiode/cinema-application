@@ -7,9 +7,9 @@ public class Showing {
     private LocalDateTime startTime;
     private int duration;
     private int seats;
-    private float price;
+    private double price;
 
-    public Showing(Movie movie, LocalDateTime startTime, int duration, int seats, float price) {
+    public Showing(Movie movie, LocalDateTime startTime, int duration, int seats, double price) {
         this.movie = movie;
         this.startTime = startTime;
         this.duration = duration;
@@ -45,7 +45,7 @@ public class Showing {
     /**
      * @return Price in euros
      */
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 }
