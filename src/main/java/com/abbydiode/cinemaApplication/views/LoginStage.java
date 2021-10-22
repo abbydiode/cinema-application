@@ -47,10 +47,10 @@ public class LoginStage extends Stage {
 
         setScene(new Scene(grid));
 
-        button.setOnAction(new EventHandler<ActionEvent>() {
+        final EventHandler<ActionEvent> signInEvent = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                User user =  database.getUserByName(usernameField.getText());
+                User user = database.getUserByName(usernameField.getText());
                 if (user != null) {
                     if (user.isPasswordEqualTo(passwordField.getText())) {
                         new PurchaseStage(app, user);
@@ -62,7 +62,10 @@ public class LoginStage extends Stage {
                     message.setText("Unknown user");
                 }
             }
-        });
+        };
+
+        passwordField.setOnAction(signInEvent);
+        button.setOnAction(signInEvent);
 
         show();
     }
