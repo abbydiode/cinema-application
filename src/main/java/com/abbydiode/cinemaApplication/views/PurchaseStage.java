@@ -3,11 +3,10 @@ package com.abbydiode.cinemaApplication.views;
 import com.abbydiode.cinemaApplication.App;
 import com.abbydiode.cinemaApplication.Database;
 import com.abbydiode.cinemaApplication.models.Showing;
+import com.abbydiode.cinemaApplication.models.Ticket;
 import com.abbydiode.cinemaApplication.models.User;
 import com.abbydiode.cinemaApplication.models.UserType;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 
 public class PurchaseStage extends Stage {
     /**
-     * @param app The application that called created this stage
+     * @param app The application that created this stage
      * @param user The user that signed in
      */
     public PurchaseStage(App app, User user) {
@@ -74,9 +73,6 @@ public class PurchaseStage extends Stage {
                 close();
             }
         });
-
-        ArrayList<Showing> roomOneShowings = database.getRooms().get(0).getShowings();
-        ArrayList<Showing> roomTwoShowings = database.getRooms().get(1).getShowings();
 
         GridPane showingsGrid = new GridPane();
         Label roomOneLabel = new Label("Room 1");
@@ -129,13 +125,7 @@ public class PurchaseStage extends Stage {
                 priceColumn2
         );
 
-        for (int i = 0; i < roomOneShowings.size(); i++) {
-            roomOneTable.getItems().add(roomOneShowings.get(i));
-        }
-
-        for (int i = 0; i < roomTwoShowings.size(); i++) {
-            roomTwoTable.getItems().add(roomTwoShowings.get(i));
-        }
+        refresh(database, roomOneTable, roomTwoTable);
 
         showingsGrid.setHgap(8);
         showingsGrid.setVgap(4);
@@ -164,7 +154,7 @@ public class PurchaseStage extends Stage {
         message.setTextFill(Color.rgb(176, 0, 32));
 
         for (int i = 1; i < 10; i++) {
-            selectedSeats.getItems().add(Integer.toString(i));
+            selectedSeats.getItems().add(i);
         }
 
         selectedSeats.getSelectionModel().select(0);
@@ -190,12 +180,14 @@ public class PurchaseStage extends Stage {
         roomOneTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                rootPane.setBottom(purchaseForm);
                 Showing selectedShowing = (Showing) roomOneTable.getSelectionModel().getSelectedItem();
-                selectedRoomLabel.setText("Room 1");
-                selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
-                selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
-                selectedTitle.setText(selectedShowing.getMovie().getTitle());
+                if (selectedShowing != null) {
+                    rootPane.setBottom(purchaseForm);
+                    selectedRoomLabel.setText("Room 1");
+                    selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
+                    selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
+                    selectedTitle.setText(selectedShowing.getMovie().getTitle());
+                }
             }
         });
 
@@ -218,11 +210,44 @@ public class PurchaseStage extends Stage {
             }
         });
 
+        purchaseButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (!selectedName.getText().isEmpty()) {
+                    Showing selectedShowing = (Showing) roomTwoTable.getSelectionModel().getSelectedItem();
+                    int selectedSeatsAmount = Integer.parseInt(selectedSeats.getValue().toString());
+                    if (selectedShowing.reserveSeats(selectedSeatsAmount)) {
+                        database.insertTicket(new Ticket(selectedShowing, selectedName.getText()));
+                        rootPane.setBottom(null);
+                        refresh(database, roomOneTable, roomTwoTable);
+                    }
+                } else {
+                    message.setText("Name cannot be empty");
+                }
+            }
+        });
+
         rootPane.setTop(topPane);
         rootPane.setCenter(showingsGrid);
 
         setScene(new Scene(rootPane));
 
         show();
+    }
+
+    private void refresh(Database database, TableView roomOneTable, TableView roomTwoTable) {
+        ArrayList<Showing> roomOneShowings = database.getRooms().get(0).getShowings();
+        ArrayList<Showing> roomTwoShowings = database.getRooms().get(1).getShowings();
+
+        roomOneTable.getItems().clear();
+        roomTwoTable.getItems().clear();
+
+        for (int i = 0; i < roomOneShowings.size(); i++) {
+            roomOneTable.getItems().add(roomOneShowings.get(i));
+        }
+
+        for (int i = 0; i < roomTwoShowings.size(); i++) {
+            roomTwoTable.getItems().add(roomTwoShowings.get(i));
+        }
     }
 }

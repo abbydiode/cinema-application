@@ -55,4 +55,14 @@ public class Showing {
     public LocalDateTime getEndTime() {
         return getStartTime().plusMinutes(getDuration());
     }
+
+    /**
+     * @param amountToReserve Amount of seats to reserve
+     * @return True if the seats could be reserved, false if there weren't enough seats
+     */
+    public boolean reserveSeats(int amountToReserve) {
+        boolean canReserve = seats - amountToReserve > 0;
+        seats -= canReserve ? amountToReserve : 0;
+        return canReserve;
+    }
 }
