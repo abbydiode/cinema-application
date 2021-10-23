@@ -8,13 +8,16 @@ import com.abbydiode.cinemaApplication.models.UserType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -75,7 +78,7 @@ public class PurchaseStage extends Stage {
         startTimeColumn.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().toString()));
 
         TableColumn<Showing, String> endTimeColumn = new TableColumn<>("End Time");
-        endTimeColumn.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().plusMinutes(showing.getValue().getDuration()).toString()));
+        endTimeColumn.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getEndTime().toString()));
 
         TableColumn<Showing, String> titleColumn = new TableColumn<>("Title");
         titleColumn.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getMovie().getTitle()));
@@ -140,8 +143,51 @@ public class PurchaseStage extends Stage {
             }
         });
 
+        GridPane purchaseForm = new GridPane();
+        Label roomLabel = new Label("Room");
+        Label startTimeLabel = new Label("Start Time");
+        Label endTimeLabel = new Label("End Time");
+        Label selectedRoomLabel = new Label();
+        Label selectedStartTimeLabel = new Label();
+        Label selectedEndTimeLabel = new Label();
+        Label titleLabel = new Label("Title");
+        Label seatsLabel = new Label("Seats");
+        Label nameLabel = new Label("Name");
+        Label selectedTitle = new Label();
+        ComboBox selectedSeats = new ComboBox();
+        TextField selectedName = new TextField();
+        Label message = new Label();
+        Button purchaseButton = new Button("Purchase");
+        Button clearButton = new Button("Clear");
+        message.setTextFill(Color.rgb(176, 0, 32));
+
+        for (int i = 1; i < 10; i++) {
+            selectedSeats.getItems().add(Integer.toString(i));
+        }
+
+        selectedSeats.getSelectionModel().select(0);
+
+        purchaseForm.setHgap(8);
+        purchaseForm.setVgap(4);
+        purchaseForm.setPadding(new Insets(8));
+        purchaseForm.add(roomLabel, 0, 0);
+        purchaseForm.add(startTimeLabel, 0, 1);
+        purchaseForm.add(endTimeLabel, 0, 2);
+        purchaseForm.add(selectedRoomLabel, 2, 0);
+        purchaseForm.add(selectedStartTimeLabel, 2, 1);
+        purchaseForm.add(selectedEndTimeLabel, 2, 2);
+        purchaseForm.add(titleLabel, 3, 0);
+        purchaseForm.add(seatsLabel, 3, 1);
+        purchaseForm.add(nameLabel, 3, 2);
+        purchaseForm.add(selectedTitle, 4, 0);
+        purchaseForm.add(selectedSeats, 4, 1);
+        purchaseForm.add(selectedName, 4, 2);
+        purchaseForm.add(purchaseButton, 5, 1);
+        purchaseForm.add(clearButton, 5, 2);
+
         rootPane.setTop(topPane);
         rootPane.setCenter(grid);
+        rootPane.setBottom(purchaseForm);
 
         setScene(new Scene(rootPane));
 

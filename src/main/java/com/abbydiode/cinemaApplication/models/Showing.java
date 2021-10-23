@@ -48,4 +48,11 @@ public class Showing {
     public double getPrice() {
         return price;
     }
+
+    /**
+     * @return The date and time that this showing ends
+     */
+    public LocalDateTime getEndTime() {
+        return getStartTime().plusMinutes(getDuration());
+    }
 }
