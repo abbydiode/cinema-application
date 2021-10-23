@@ -6,18 +6,20 @@ import com.abbydiode.cinemaApplication.models.Showing;
 import com.abbydiode.cinemaApplication.models.User;
 import com.abbydiode.cinemaApplication.models.UserType;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -65,10 +67,18 @@ public class PurchaseStage extends Stage {
 
         VBox topPane = new VBox(menuBar);
 
+        signOutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                new LoginStage(app);
+                close();
+            }
+        });
+
         ArrayList<Showing> roomOneShowings = database.getRooms().get(0).getShowings();
         ArrayList<Showing> roomTwoShowings = database.getRooms().get(1).getShowings();
 
-        GridPane grid = new GridPane();
+        GridPane showingsGrid = new GridPane();
         Label roomOneLabel = new Label("Room 1");
         Label roomTwoLabel = new Label("Room 2");
         TableView roomOneTable = new TableView();
@@ -127,21 +137,13 @@ public class PurchaseStage extends Stage {
             roomTwoTable.getItems().add(roomTwoShowings.get(i));
         }
 
-        grid.setHgap(8);
-        grid.setVgap(4);
-        grid.setAlignment(Pos.CENTER);
-        grid.add(roomOneLabel, 0, 0);
-        grid.add(roomTwoLabel, 1, 0);
-        grid.add(roomOneTable, 0, 1);
-        grid.add(roomTwoTable, 1, 1);
-
-        signOutButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                new LoginStage(app);
-                close();
-            }
-        });
+        showingsGrid.setHgap(8);
+        showingsGrid.setVgap(4);
+        showingsGrid.setAlignment(Pos.CENTER);
+        showingsGrid.add(roomOneLabel, 0, 0);
+        showingsGrid.add(roomTwoLabel, 1, 0);
+        showingsGrid.add(roomOneTable, 0, 1);
+        showingsGrid.add(roomTwoTable, 1, 1);
 
         GridPane purchaseForm = new GridPane();
         Label roomLabel = new Label("Room");
@@ -185,9 +187,39 @@ public class PurchaseStage extends Stage {
         purchaseForm.add(purchaseButton, 5, 1);
         purchaseForm.add(clearButton, 5, 2);
 
+        roomOneTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                rootPane.setBottom(purchaseForm);
+                Showing selectedShowing = (Showing) roomOneTable.getSelectionModel().getSelectedItem();
+                selectedRoomLabel.setText("Room 1");
+                selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
+                selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
+                selectedTitle.setText(selectedShowing.getMovie().getTitle());
+            }
+        });
+
+        roomTwoTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                rootPane.setBottom(purchaseForm);
+                Showing selectedShowing = (Showing) roomTwoTable.getSelectionModel().getSelectedItem();
+                selectedRoomLabel.setText("Room 2");
+                selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
+                selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
+                selectedTitle.setText(selectedShowing.getMovie().getTitle());
+            }
+        });
+
+        clearButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                rootPane.setBottom(null);
+            }
+        });
+
         rootPane.setTop(topPane);
-        rootPane.setCenter(grid);
-        rootPane.setBottom(purchaseForm);
+        rootPane.setCenter(showingsGrid);
 
         setScene(new Scene(rootPane));
 
