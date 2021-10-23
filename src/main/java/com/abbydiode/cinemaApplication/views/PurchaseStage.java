@@ -4,6 +4,7 @@ import com.abbydiode.cinemaApplication.App;
 import com.abbydiode.cinemaApplication.Database;
 import com.abbydiode.cinemaApplication.models.Showing;
 import com.abbydiode.cinemaApplication.models.User;
+import com.abbydiode.cinemaApplication.models.UserType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -33,10 +33,33 @@ public class PurchaseStage extends Stage {
         BorderPane rootPane = new BorderPane();
 
         MenuBar menuBar = new MenuBar();
-        Menu menu = new Menu("Application");
+
+        Menu helpMenu = new Menu("Help");
+        Menu signOutMenu = new Menu("Sign Out");
+        Menu adminMenu = new Menu("Admin");
+
         MenuItem signOutButton = new MenuItem("Sign Out");
-        menuBar.getMenus().add(menu);
-        menu.getItems().add(signOutButton);
+        MenuItem aboutButton = new MenuItem("About");
+        MenuItem manageShowingsButton = new MenuItem("Manage Showings");
+        MenuItem manageMoviesButton = new MenuItem("Manage Movies");
+
+        signOutMenu.getItems().add(signOutButton);
+        helpMenu.getItems().add(aboutButton);
+
+        if (user.getUserType() == UserType.ADMINISTRATOR) {
+            menuBar.getMenus().add(adminMenu);
+        }
+
+        menuBar.getMenus().addAll(
+                helpMenu,
+                signOutMenu
+        );
+
+        adminMenu.getItems().addAll(
+                manageShowingsButton,
+                manageMoviesButton
+        );
+
         VBox topPane = new VBox(menuBar);
 
         ArrayList<Showing> roomOneShowings = database.getRooms().get(0).getShowings();
@@ -78,17 +101,20 @@ public class PurchaseStage extends Stage {
         TableColumn<Showing, String> priceColumn2 = new TableColumn<>("Price");
         priceColumn2.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getPrice()));
 
-        roomOneTable.getColumns().add(startTimeColumn);
-        roomOneTable.getColumns().add(endTimeColumn);
-        roomOneTable.getColumns().add(titleColumn);
-        roomOneTable.getColumns().add(seatsColumn);
-        roomOneTable.getColumns().add(priceColumn);
+        roomOneTable.getColumns().addAll(
+                startTimeColumn,
+                endTimeColumn,
+                titleColumn,
+                seatsColumn,
+                priceColumn2
+        );
 
-        roomTwoTable.getColumns().add(startTimeColumn2);
-        roomTwoTable.getColumns().add(endTimeColumn2);
-        roomTwoTable.getColumns().add(titleColumn2);
-        roomTwoTable.getColumns().add(seatsColumn2);
-        roomTwoTable.getColumns().add(priceColumn2);
+        roomTwoTable.getColumns().addAll(startTimeColumn2,
+                endTimeColumn2,
+                titleColumn2,
+                seatsColumn2,
+                priceColumn2
+        );
 
         for (int i = 0; i < roomOneShowings.size(); i++) {
             roomOneTable.getItems().add(roomOneShowings.get(i));
