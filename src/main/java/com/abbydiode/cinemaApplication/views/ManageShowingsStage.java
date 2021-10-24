@@ -83,7 +83,7 @@ public class ManageShowingsStage extends Stage {
         manageMoviesButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // new ManageMoviesStage(app, user);
+                new ManageMoviesStage(app, user);
                 close();
             }
         });
@@ -129,7 +129,7 @@ public class ManageShowingsStage extends Stage {
                 endTimeColumn,
                 titleColumn,
                 seatsColumn,
-                priceColumn2
+                priceColumn
         );
 
         roomTwoTable.getColumns().addAll(startTimeColumn2,
