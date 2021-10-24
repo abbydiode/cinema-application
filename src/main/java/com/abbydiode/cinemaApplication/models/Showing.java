@@ -29,6 +29,13 @@ public class Showing {
     }
 
     /**
+     * @return Date and time that the showing starts minus 15 minutes
+     */
+    public LocalDateTime getSafeStartTime() {
+        return startTime.minusMinutes(15);
+    }
+
+    /**
      * @return Duration in minutes
      */
     public int getDuration() {
@@ -54,6 +61,13 @@ public class Showing {
      */
     public LocalDateTime getEndTime() {
         return getStartTime().plusMinutes(getDuration());
+    }
+
+    /**
+     * @return The date and time that this showing ends plus 15 minutes
+     */
+    public LocalDateTime getSafeEndTime() {
+        return getEndTime().plusMinutes(15);
     }
 
     /**

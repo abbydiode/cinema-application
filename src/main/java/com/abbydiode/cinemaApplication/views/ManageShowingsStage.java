@@ -241,17 +241,30 @@ public class ManageShowingsStage extends Stage {
                 Showing selectedShowing = (Showing) (roomOneTable.getSelectionModel().isEmpty() ? roomTwoTable.getSelectionModel().getSelectedItem() : roomOneTable.getSelectionModel().getSelectedItem());
                 try {
                     LocalDateTime startTime = LocalDateTime.parse(selectedStartTime.getText());
-                    System.out.println(startTime);
-                    database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).insertShowing(new Showing(
-                            new Movie(selectedTitle.getSelectionModel().getSelectedItem().toString()),
-                            startTime,
-                            selectedShowing.getDuration(),
-                            selectedShowing.getSeats(),
-                            selectedShowing.getPrice()
-                    ));
-                    refresh(database, roomOneTable, roomTwoTable);
-                    rootPane.setBottom(null);
-                    message.setText("");
+                    ArrayList<Showing> showings = database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).getShowings();
+                    boolean timeSlotAvailable = true;
+
+                    for (int i = 0; i < showings.size(); i++) {
+                        Showing showing = showings.get(i);
+                        if (showing.getSafeStartTime().isBefore(startTime.plusMinutes(selectedShowing.getDuration())) && showing.getSafeEndTime().isAfter(startTime)) {
+                            timeSlotAvailable = false;
+                        }
+                    }
+
+                    if (timeSlotAvailable) {
+                        database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).insertShowing(new Showing(
+                                new Movie(selectedTitle.getSelectionModel().getSelectedItem().toString()),
+                                startTime,
+                                selectedShowing.getDuration(),
+                                selectedShowing.getSeats(),
+                                selectedShowing.getPrice()
+                        ));
+                        refresh(database, roomOneTable, roomTwoTable);
+                        rootPane.setBottom(null);
+                        message.setText("");
+                    } else {
+                        message.setText("This timeslot is not available, there needs to be a 15 minute break before and after every showing");
+                    }
                 } catch(Exception exception) {
                     message.setText("Incorrect start time, must be formatted as YYYY-MM-DDTHH:MM:SS (ISO-8601)");
                 }

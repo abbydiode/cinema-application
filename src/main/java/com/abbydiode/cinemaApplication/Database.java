@@ -89,7 +89,7 @@ public class Database {
         insertMovie(new Movie("The Parish"));
 
         for (int i = 0; i < movies.size(); i++) {
-            LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1630454400 + random.nextInt(2678400), 0, ZoneOffset.UTC);
+            LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1441058400 + random.nextInt(2678400), 0, ZoneOffset.UTC);
             if (i % 2 == 1) {
                 rooms.get(0).insertShowing(new Showing(movies.get(i), dateTime, 60, 100, 10.00));
             } else {
