@@ -247,8 +247,7 @@ public class ManageShowingsStage extends Stage {
                     ArrayList<Showing> showings = database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).getShowings();
                     boolean timeSlotAvailable = true;
 
-                    for (int i = 0; i < showings.size(); i++) {
-                        Showing showing = showings.get(i);
+                    for (Showing showing : showings) {
                         if (showing.getSafeStartTime().isBefore(startTime.plusMinutes(selectedShowing.getMovie().getDuration())) && showing.getSafeEndTime().isAfter(startTime)) {
                             timeSlotAvailable = false;
                         }
@@ -295,12 +294,12 @@ public class ManageShowingsStage extends Stage {
         roomOneTable.getItems().clear();
         roomTwoTable.getItems().clear();
 
-        for (int i = 0; i < roomOneShowings.size(); i++) {
-            roomOneTable.getItems().add(roomOneShowings.get(i));
+        for (Showing roomOneShowing : roomOneShowings) {
+            roomOneTable.getItems().add(roomOneShowing);
         }
 
-        for (int i = 0; i < roomTwoShowings.size(); i++) {
-            roomTwoTable.getItems().add(roomTwoShowings.get(i));
+        for (Showing roomTwoShowing : roomTwoShowings) {
+            roomTwoTable.getItems().add(roomTwoShowing);
         }
     }
 }

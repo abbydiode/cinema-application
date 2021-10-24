@@ -265,12 +265,12 @@ public class PurchaseStage extends Stage {
         roomOneTable.getItems().clear();
         roomTwoTable.getItems().clear();
 
-        for (int i = 0; i < roomOneShowings.size(); i++) {
-            roomOneTable.getItems().add(roomOneShowings.get(i));
+        for (Showing roomOneShowing : roomOneShowings) {
+            roomOneTable.getItems().add(roomOneShowing);
         }
 
-        for (int i = 0; i < roomTwoShowings.size(); i++) {
-            roomTwoTable.getItems().add(roomTwoShowings.get(i));
+        for (Showing roomTwoShowing : roomTwoShowings) {
+            roomTwoTable.getItems().add(roomTwoShowing);
         }
     }
 }
