@@ -174,6 +174,7 @@ public class PurchaseStage extends Stage {
         purchaseForm.add(selectedTitle, 4, 0);
         purchaseForm.add(selectedSeats, 4, 1);
         purchaseForm.add(selectedName, 4, 2);
+        purchaseForm.add(message, 5, 0);
         purchaseForm.add(purchaseButton, 5, 1);
         purchaseForm.add(clearButton, 5, 2);
 
@@ -194,12 +195,14 @@ public class PurchaseStage extends Stage {
         roomTwoTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                rootPane.setBottom(purchaseForm);
                 Showing selectedShowing = (Showing) roomTwoTable.getSelectionModel().getSelectedItem();
-                selectedRoomLabel.setText("Room 2");
-                selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
-                selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
-                selectedTitle.setText(selectedShowing.getMovie().getTitle());
+                if (selectedShowing != null) {
+                    rootPane.setBottom(purchaseForm);
+                    selectedRoomLabel.setText("Room 2");
+                    selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
+                    selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
+                    selectedTitle.setText(selectedShowing.getMovie().getTitle());
+                }
             }
         });
 
@@ -207,6 +210,7 @@ public class PurchaseStage extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 rootPane.setBottom(null);
+                message.setText("");
             }
         });
 
@@ -214,12 +218,15 @@ public class PurchaseStage extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 if (!selectedName.getText().isEmpty()) {
-                    Showing selectedShowing = (Showing) roomTwoTable.getSelectionModel().getSelectedItem();
+                    Showing selectedShowing = (Showing) (roomOneTable.getSelectionModel().isEmpty() ? roomTwoTable.getSelectionModel().getSelectedItem() : roomOneTable.getSelectionModel().getSelectedItem());
                     int selectedSeatsAmount = Integer.parseInt(selectedSeats.getValue().toString());
                     if (selectedShowing.reserveSeats(selectedSeatsAmount)) {
                         database.insertTicket(new Ticket(selectedShowing, selectedName.getText()));
                         rootPane.setBottom(null);
+                        message.setText("");
                         refresh(database, roomOneTable, roomTwoTable);
+                    } else {
+                        message.setText("You can't reserve any more seats");
                     }
                 } else {
                     message.setText("Name cannot be empty");
