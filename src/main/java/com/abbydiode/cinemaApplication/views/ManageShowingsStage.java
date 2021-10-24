@@ -2,10 +2,7 @@ package com.abbydiode.cinemaApplication.views;
 
 import com.abbydiode.cinemaApplication.App;
 import com.abbydiode.cinemaApplication.Database;
-import com.abbydiode.cinemaApplication.models.Showing;
-import com.abbydiode.cinemaApplication.models.Ticket;
-import com.abbydiode.cinemaApplication.models.User;
-import com.abbydiode.cinemaApplication.models.UserType;
+import com.abbydiode.cinemaApplication.models.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,17 +19,17 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-public class PurchaseStage extends Stage {
+public class ManageShowingsStage extends Stage {
     /**
      * @param app The application that created this stage
      * @param user The user that signed in
      */
-    public PurchaseStage(App app, User user) {
+    public ManageShowingsStage(App app, User user) {
         Database database = app.getDatabase();
 
         setWidth(1280);
         setHeight(720);
-        setTitle("Cinema Application - Purchase Tickets");
+        setTitle("Cinema Application - Manage Showings");
 
         BorderPane rootPane = new BorderPane();
 
@@ -44,8 +41,8 @@ public class PurchaseStage extends Stage {
 
         MenuItem signOutButton = new MenuItem("Sign Out");
         MenuItem aboutButton = new MenuItem("About");
-        MenuItem manageShowingsButton = new MenuItem("Manage Showings");
         MenuItem manageMoviesButton = new MenuItem("Manage Movies");
+        MenuItem purchaseButton = new MenuItem("Purchase Tickets");
 
         signOutMenu.getItems().add(signOutButton);
         helpMenu.getItems().add(aboutButton);
@@ -60,7 +57,7 @@ public class PurchaseStage extends Stage {
         );
 
         adminMenu.getItems().addAll(
-                manageShowingsButton,
+                purchaseButton,
                 manageMoviesButton
         );
 
@@ -74,10 +71,10 @@ public class PurchaseStage extends Stage {
             }
         });
 
-        manageShowingsButton.setOnAction(new EventHandler<ActionEvent>() {
+        purchaseButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                new ManageShowingsStage(app, user);
+                new PurchaseStage(app, user);
                 close();
             }
         });
@@ -151,59 +148,63 @@ public class PurchaseStage extends Stage {
         showingsGrid.add(roomOneTable, 0, 1);
         showingsGrid.add(roomTwoTable, 1, 1);
 
-        GridPane purchaseForm = new GridPane();
+        GridPane manageShowingsForm = new GridPane();
         Label roomLabel = new Label("Room");
         Label startTimeLabel = new Label("Start Time");
         Label endTimeLabel = new Label("End Time");
-        Label selectedRoomLabel = new Label();
-        Label selectedStartTimeLabel = new Label();
+        ComboBox selectedRoom = new ComboBox();
+        TextField selectedStartTime = new TextField();
         Label selectedEndTimeLabel = new Label();
         Label titleLabel = new Label("Title");
         Label seatsLabel = new Label("Seats");
-        Label nameLabel = new Label("Name");
-        Label selectedTitle = new Label();
-        ComboBox selectedSeats = new ComboBox();
-        TextField selectedName = new TextField();
+        Label priceLabel = new Label("Price");
+        ComboBox selectedTitle = new ComboBox();
+        Label selectedSeatslabel = new Label();
+        Label selectedPrice = new Label();
         Label message = new Label();
-        Button purchaseButton = new Button("Purchase");
+        Button addButton = new Button("Add Showing");
         Button clearButton = new Button("Clear");
         message.setTextFill(Color.rgb(176, 0, 32));
+        selectedRoom.getItems().addAll("Room 1", "Room 2");
+        selectedRoom.getSelectionModel().select(0);
 
-        for (int i = 1; i < 10; i++) {
-            selectedSeats.getItems().add(i);
+        for (int i = 0; i < database.getMovies().size(); i++) {
+            Movie movie = database.getMovies().get(i);
+            selectedTitle.getItems().add(movie.getTitle());
         }
 
-        selectedSeats.getSelectionModel().select(0);
+        selectedTitle.getSelectionModel().select(0);
 
-        purchaseForm.setHgap(8);
-        purchaseForm.setVgap(4);
-        purchaseForm.setPadding(new Insets(8));
-        purchaseForm.add(roomLabel, 0, 0);
-        purchaseForm.add(startTimeLabel, 0, 1);
-        purchaseForm.add(endTimeLabel, 0, 2);
-        purchaseForm.add(selectedRoomLabel, 2, 0);
-        purchaseForm.add(selectedStartTimeLabel, 2, 1);
-        purchaseForm.add(selectedEndTimeLabel, 2, 2);
-        purchaseForm.add(titleLabel, 3, 0);
-        purchaseForm.add(seatsLabel, 3, 1);
-        purchaseForm.add(nameLabel, 3, 2);
-        purchaseForm.add(selectedTitle, 4, 0);
-        purchaseForm.add(selectedSeats, 4, 1);
-        purchaseForm.add(selectedName, 4, 2);
-        purchaseForm.add(message, 5, 0);
-        purchaseForm.add(purchaseButton, 5, 1);
-        purchaseForm.add(clearButton, 5, 2);
+        manageShowingsForm.setHgap(8);
+        manageShowingsForm.setVgap(4);
+        manageShowingsForm.setPadding(new Insets(8));
+        manageShowingsForm.add(roomLabel, 0, 0);
+        manageShowingsForm.add(startTimeLabel, 0, 1);
+        manageShowingsForm.add(endTimeLabel, 0, 2);
+        manageShowingsForm.add(selectedRoom, 2, 0);
+        manageShowingsForm.add(selectedStartTime, 2, 1);
+        manageShowingsForm.add(selectedEndTimeLabel, 2, 2);
+        manageShowingsForm.add(titleLabel, 3, 0);
+        manageShowingsForm.add(seatsLabel, 3, 1);
+        manageShowingsForm.add(priceLabel, 3, 2);
+        manageShowingsForm.add(selectedTitle, 4, 0);
+        manageShowingsForm.add(selectedSeatslabel, 4, 1);
+        manageShowingsForm.add(selectedPrice, 4, 2);
+        manageShowingsForm.add(message, 5, 0);
+        manageShowingsForm.add(addButton, 5, 1);
+        manageShowingsForm.add(clearButton, 5, 2);
 
         roomOneTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 Showing selectedShowing = (Showing) roomOneTable.getSelectionModel().getSelectedItem();
                 if (selectedShowing != null) {
-                    rootPane.setBottom(purchaseForm);
-                    selectedRoomLabel.setText("Room 1");
-                    selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
+                    rootPane.setBottom(manageShowingsForm);
+                    selectedRoom.getSelectionModel().select(0);
+                    selectedStartTime.setText(selectedShowing.getStartTime().toString());
                     selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
-                    selectedTitle.setText(selectedShowing.getMovie().getTitle());
+                    selectedTitle.setValue(selectedShowing.getMovie().getTitle());
+                    selectedPrice.setText("€" + selectedShowing.getPrice());
                 }
             }
         });
@@ -213,11 +214,12 @@ public class PurchaseStage extends Stage {
             public void handle(MouseEvent event) {
                 Showing selectedShowing = (Showing) roomTwoTable.getSelectionModel().getSelectedItem();
                 if (selectedShowing != null) {
-                    rootPane.setBottom(purchaseForm);
-                    selectedRoomLabel.setText("Room 2");
-                    selectedStartTimeLabel.setText(selectedShowing.getStartTime().toString());
+                    rootPane.setBottom(manageShowingsForm);
+                    selectedRoom.getSelectionModel().select(0);
+                    selectedStartTime.setText(selectedShowing.getStartTime().toString());
                     selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
-                    selectedTitle.setText(selectedShowing.getMovie().getTitle());
+                    selectedTitle.setValue(selectedShowing.getMovie().getTitle());
+                    selectedPrice.setText("€" + selectedShowing.getPrice());
                 }
             }
         });
@@ -230,23 +232,10 @@ public class PurchaseStage extends Stage {
             }
         });
 
-        purchaseButton.setOnAction(new EventHandler<ActionEvent>() {
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (!selectedName.getText().isEmpty()) {
-                    Showing selectedShowing = (Showing) (roomOneTable.getSelectionModel().isEmpty() ? roomTwoTable.getSelectionModel().getSelectedItem() : roomOneTable.getSelectionModel().getSelectedItem());
-                    int selectedSeatsAmount = Integer.parseInt(selectedSeats.getValue().toString());
-                    if (selectedShowing.reserveSeats(selectedSeatsAmount)) {
-                        database.insertTicket(new Ticket(selectedShowing, selectedName.getText()));
-                        rootPane.setBottom(null);
-                        message.setText("");
-                        refresh(database, roomOneTable, roomTwoTable);
-                    } else {
-                        message.setText("You can't reserve any more seats");
-                    }
-                } else {
-                    message.setText("Name cannot be empty");
-                }
+                // TODO: Implement ability to add a show
             }
         });
 
