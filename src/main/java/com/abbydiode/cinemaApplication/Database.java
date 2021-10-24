@@ -89,19 +89,19 @@ public class Database {
         insertRoom(new Room());
         insertRoom(new Room());
 
-        insertMovie(new Movie("No Mercy"));
-        insertMovie(new Movie("Crash Course"));
-        insertMovie(new Movie("Death Toll"));
-        insertMovie(new Movie("Dead Air"));
-        insertMovie(new Movie("Blood Harvest"));
-        insertMovie(new Movie("The Sacrifice"));
-        insertMovie(new Movie("The Last Stand"));
-        insertMovie(new Movie("Dead Center"));
-        insertMovie(new Movie("The Passing"));
-        insertMovie(new Movie("Dark Carnival"));
-        insertMovie(new Movie("Swamp Fever"));
-        insertMovie(new Movie("Hard Rain"));
-        insertMovie(new Movie("The Parish"));
+        insertMovie(new Movie("No Mercy", 12, 100));
+        insertMovie(new Movie("Crash Course", 15, 120));
+        insertMovie(new Movie("Death Toll", 15, 120));
+        insertMovie(new Movie("Dead Air", 12, 100));
+        insertMovie(new Movie("Blood Harvest", 20, 180));
+        insertMovie(new Movie("The Sacrifice", 12, 100));
+        insertMovie(new Movie("The Last Stand", 12, 100));
+        insertMovie(new Movie("Dead Center", 15, 120));
+        insertMovie(new Movie("The Passing", 20, 180));
+        insertMovie(new Movie("Dark Carnival", 15, 120));
+        insertMovie(new Movie("Swamp Fever", 9, 60));
+        insertMovie(new Movie("Hard Rain", 9, 60));
+        insertMovie(new Movie("The Parish", 20, 180));
 
         for (int i = 0; i < movies.size(); i++) {
             LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1441058400 + random.nextInt(2678400), 0, ZoneOffset.UTC);

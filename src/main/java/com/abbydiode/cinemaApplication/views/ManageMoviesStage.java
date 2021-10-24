@@ -2,6 +2,7 @@ package com.abbydiode.cinemaApplication.views;
 
 import com.abbydiode.cinemaApplication.App;
 import com.abbydiode.cinemaApplication.Database;
+import com.abbydiode.cinemaApplication.Utilities;
 import com.abbydiode.cinemaApplication.models.Movie;
 import com.abbydiode.cinemaApplication.models.User;
 import com.abbydiode.cinemaApplication.models.UserType;
@@ -136,8 +137,8 @@ public class ManageMoviesStage extends Stage {
         manageMoviesForm.add(durationLabel, 0, 1);
         manageMoviesForm.add(priceLabel, 0, 2);
         manageMoviesForm.add(selectedTitle, 1, 0);
-        manageMoviesForm.add(selectedPrice, 1, 1);
-        manageMoviesForm.add(selectedDuration, 1, 2);
+        manageMoviesForm.add(selectedDuration, 1, 1);
+        manageMoviesForm.add(selectedPrice, 1, 2);
         manageMoviesForm.add(message, 2, 0);
         manageMoviesForm.add(addButton, 2, 1);
         manageMoviesForm.add(clearButton, 2, 2);
@@ -149,7 +150,7 @@ public class ManageMoviesStage extends Stage {
                 if (selectedMovie != null) {
                     rootPane.setBottom(manageMoviesForm);
                     selectedTitle.setText(selectedMovie.getTitle());
-                    selectedPrice.setText("€" + selectedMovie.getPrice());
+                    selectedPrice.setText(Double.toString(selectedMovie.getPrice()));
                     selectedDuration.setText(Integer.toString(selectedMovie.getDuration()));
                 }
             }
@@ -167,7 +168,24 @@ public class ManageMoviesStage extends Stage {
             @Override
             public void handle(ActionEvent event) {
                 Movie selectedMovie = (Movie) movieTable.getSelectionModel().getSelectedItem();
-                // TODO: Implement functionality
+                Double price = Utilities.tryParseDouble(selectedPrice.getText());
+                Integer duration = Utilities.tryParseInteger(selectedDuration.getText());
+                if (price != null && price > 0) {
+                    if (duration != null && duration > 0) {
+                        if (!selectedTitle.getText().isEmpty()) {
+                            database.insertMovie(new Movie(selectedTitle.getText(), price, duration));
+                            refresh(database, movieTable);
+                            rootPane.setBottom(null);
+                            message.setText("");
+                        } else {
+                            message.setText("Movie title cannot be empty");
+                        }
+                    } else {
+                        message.setText("Invalid duration");
+                    }
+                } else {
+                    message.setText("Invalid price");
+                }
             }
         });
 

@@ -5,8 +5,10 @@ public class Movie {
     private double price;
     private int duration;
 
-    public Movie(String title) {
+    public Movie(String title, double price, int duration) {
         this.title = title;
+        this.price = price;
+        this.duration = duration;
     }
 
     /**
