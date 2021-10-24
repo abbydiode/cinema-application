@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ManageShowingsStage extends Stage {
@@ -159,7 +160,7 @@ public class ManageShowingsStage extends Stage {
         Label seatsLabel = new Label("Seats");
         Label priceLabel = new Label("Price");
         ComboBox selectedTitle = new ComboBox();
-        Label selectedSeatslabel = new Label();
+        Label selectedSeatsLabel = new Label();
         Label selectedPrice = new Label();
         Label message = new Label();
         Button addButton = new Button("Add Showing");
@@ -188,7 +189,7 @@ public class ManageShowingsStage extends Stage {
         manageShowingsForm.add(seatsLabel, 3, 1);
         manageShowingsForm.add(priceLabel, 3, 2);
         manageShowingsForm.add(selectedTitle, 4, 0);
-        manageShowingsForm.add(selectedSeatslabel, 4, 1);
+        manageShowingsForm.add(selectedSeatsLabel, 4, 1);
         manageShowingsForm.add(selectedPrice, 4, 2);
         manageShowingsForm.add(message, 5, 0);
         manageShowingsForm.add(addButton, 5, 1);
@@ -205,6 +206,7 @@ public class ManageShowingsStage extends Stage {
                     selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
                     selectedTitle.setValue(selectedShowing.getMovie().getTitle());
                     selectedPrice.setText("€" + selectedShowing.getPrice());
+                    selectedSeatsLabel.setText(Integer.toString(selectedShowing.getSeats()));
                 }
             }
         });
@@ -215,11 +217,12 @@ public class ManageShowingsStage extends Stage {
                 Showing selectedShowing = (Showing) roomTwoTable.getSelectionModel().getSelectedItem();
                 if (selectedShowing != null) {
                     rootPane.setBottom(manageShowingsForm);
-                    selectedRoom.getSelectionModel().select(0);
+                    selectedRoom.getSelectionModel().select(1);
                     selectedStartTime.setText(selectedShowing.getStartTime().toString());
                     selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
                     selectedTitle.setValue(selectedShowing.getMovie().getTitle());
                     selectedPrice.setText("€" + selectedShowing.getPrice());
+                    selectedSeatsLabel.setText(Integer.toString(selectedShowing.getSeats()));
                 }
             }
         });
@@ -235,7 +238,23 @@ public class ManageShowingsStage extends Stage {
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // TODO: Implement ability to add a show
+                Showing selectedShowing = (Showing) (roomOneTable.getSelectionModel().isEmpty() ? roomTwoTable.getSelectionModel().getSelectedItem() : roomOneTable.getSelectionModel().getSelectedItem());
+                try {
+                    LocalDateTime startTime = LocalDateTime.parse(selectedStartTime.getText());
+                    System.out.println(startTime);
+                    database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).insertShowing(new Showing(
+                            new Movie(selectedTitle.getSelectionModel().getSelectedItem().toString()),
+                            startTime,
+                            selectedShowing.getDuration(),
+                            selectedShowing.getSeats(),
+                            selectedShowing.getPrice()
+                    ));
+                    refresh(database, roomOneTable, roomTwoTable);
+                    rootPane.setBottom(null);
+                    message.setText("");
+                } catch(Exception exception) {
+                    message.setText("Incorrect start time, must be formatted as YYYY-MM-DDTHH:MM:SS (ISO-8601)");
+                }
             }
         });
 
