@@ -230,8 +230,11 @@ public class ManageShowingsStage extends Stage {
         clearButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                rootPane.setBottom(null);
+                selectedRoom.getSelectionModel().select(0);
+                selectedStartTime.setText("");
+                selectedTitle.getSelectionModel().select(0);
                 message.setText("");
+                rootPane.setBottom(null);
             }
         });
 
@@ -266,6 +269,14 @@ public class ManageShowingsStage extends Stage {
                 } catch(Exception exception) {
                     message.setText("Incorrect start time, must be formatted as YYYY-MM-DDTHH:MM:SS (ISO-8601)");
                 }
+            }
+        });
+
+        selectedTitle.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Movie selectedMovie = database.getMovieByName(selectedTitle.getValue().toString());
+                selectedPrice.setText(Double.toString(selectedMovie.getPrice()));
             }
         });
 

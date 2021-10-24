@@ -159,7 +159,9 @@ public class ManageMoviesStage extends Stage {
         clearButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                rootPane.setBottom(null);
+                selectedTitle.setText("");
+                selectedDuration.setText("");
+                selectedPrice.setText("");
                 message.setText("");
             }
         });
@@ -175,7 +177,6 @@ public class ManageMoviesStage extends Stage {
                         if (!selectedTitle.getText().isEmpty()) {
                             database.insertMovie(new Movie(selectedTitle.getText(), price, duration));
                             refresh(database, movieTable);
-                            rootPane.setBottom(null);
                             message.setText("");
                         } else {
                             message.setText("Movie title cannot be empty");
@@ -191,6 +192,7 @@ public class ManageMoviesStage extends Stage {
 
         rootPane.setTop(topPane);
         rootPane.setCenter(movieGrid);
+        rootPane.setBottom(manageMoviesForm);
 
         setScene(new Scene(rootPane));
 
