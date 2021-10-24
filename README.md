@@ -2,7 +2,7 @@
 
 ## Usage
 
-1. Open the application with `javafx run`.
+1. Run the application with `mvn javafx:run`.
 2. Sign in with one of the [credentials](#user-credentials) listed below.
 3. Purchase a ticket by clicking on a showing, selecting the amount of seats you want to reserve and entering a name, then click <kbd>Purchase</kbd>.
 4. Sign out by clicking <kbd>Sign Out</kbd> in the top menu bar and then again in the pop-out, then sign in with an administrator account.
