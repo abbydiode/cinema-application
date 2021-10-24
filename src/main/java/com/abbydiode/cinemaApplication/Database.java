@@ -21,6 +21,10 @@ public class Database {
         return users;
     }
 
+    /**
+     * @param name Username of the user to find
+     * @return The corresponding user or if no user was found null
+     */
     public User getUserByName(String name) {
         return users.stream().filter(user -> user.getName().equals(name)).findFirst().orElse(null);
     }
@@ -49,6 +53,14 @@ public class Database {
         return movies;
     }
 
+    /**
+     * @param title Title of the movie to find
+     * @return The corresponding movie or if no movie was found null
+     */
+    public Movie getMovieByName(String title) {
+        return movies.stream().filter(movie -> movie.getTitle().equals(title)).findFirst().orElse(null);
+    }
+
     public void deleteMovie(Movie movie) {
         movies.remove(movie);
     }
@@ -65,6 +77,9 @@ public class Database {
         rooms.remove(room);
     }
 
+    /**
+     * Adds mock data to the database
+     */
     public void initializeDatabase() {
         Random random = new Random();
 
@@ -91,9 +106,9 @@ public class Database {
         for (int i = 0; i < movies.size(); i++) {
             LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1441058400 + random.nextInt(2678400), 0, ZoneOffset.UTC);
             if (i % 2 == 1) {
-                rooms.get(0).insertShowing(new Showing(movies.get(i), dateTime, 60, 100, 10.00));
+                rooms.get(0).insertShowing(new Showing(movies.get(i), dateTime, 100));
             } else {
-                rooms.get(1).insertShowing(new Showing(movies.get(i), dateTime, 120, 200, 20.00));
+                rooms.get(1).insertShowing(new Showing(movies.get(i), dateTime, 200));
             }
         }
     }

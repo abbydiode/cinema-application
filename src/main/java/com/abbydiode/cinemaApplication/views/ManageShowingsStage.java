@@ -107,13 +107,13 @@ public class ManageShowingsStage extends Stage {
         seatsColumn.setCellValueFactory(showing -> new SimpleStringProperty(Integer.toString(showing.getValue().getSeats())));
 
         TableColumn<Showing, String> priceColumn = new TableColumn<>("Price");
-        priceColumn.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getPrice()));
+        priceColumn.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getMovie().getPrice()));
 
         TableColumn<Showing, String> startTimeColumn2 = new TableColumn<>("Start Time");
         startTimeColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().toString()));
 
         TableColumn<Showing, String> endTimeColumn2 = new TableColumn<>("End Time");
-        endTimeColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().plusMinutes(showing.getValue().getDuration()).toString()));
+        endTimeColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().plusMinutes(showing.getValue().getMovie().getDuration()).toString()));
 
         TableColumn<Showing, String> titleColumn2 = new TableColumn<>("Title");
         titleColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getMovie().getTitle()));
@@ -122,7 +122,7 @@ public class ManageShowingsStage extends Stage {
         seatsColumn2.setCellValueFactory(showing -> new SimpleStringProperty(Integer.toString(showing.getValue().getSeats())));
 
         TableColumn<Showing, String> priceColumn2 = new TableColumn<>("Price");
-        priceColumn2.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getPrice()));
+        priceColumn2.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getMovie().getPrice()));
 
         roomOneTable.getColumns().addAll(
                 startTimeColumn,
@@ -205,7 +205,7 @@ public class ManageShowingsStage extends Stage {
                     selectedStartTime.setText(selectedShowing.getStartTime().toString());
                     selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
                     selectedTitle.setValue(selectedShowing.getMovie().getTitle());
-                    selectedPrice.setText("€" + selectedShowing.getPrice());
+                    selectedPrice.setText("€" + selectedShowing.getMovie().getPrice());
                     selectedSeatsLabel.setText(Integer.toString(selectedShowing.getSeats()));
                 }
             }
@@ -221,7 +221,7 @@ public class ManageShowingsStage extends Stage {
                     selectedStartTime.setText(selectedShowing.getStartTime().toString());
                     selectedEndTimeLabel.setText(selectedShowing.getEndTime().toString());
                     selectedTitle.setValue(selectedShowing.getMovie().getTitle());
-                    selectedPrice.setText("€" + selectedShowing.getPrice());
+                    selectedPrice.setText("€" + selectedShowing.getMovie().getPrice());
                     selectedSeatsLabel.setText(Integer.toString(selectedShowing.getSeats()));
                 }
             }
@@ -246,18 +246,16 @@ public class ManageShowingsStage extends Stage {
 
                     for (int i = 0; i < showings.size(); i++) {
                         Showing showing = showings.get(i);
-                        if (showing.getSafeStartTime().isBefore(startTime.plusMinutes(selectedShowing.getDuration())) && showing.getSafeEndTime().isAfter(startTime)) {
+                        if (showing.getSafeStartTime().isBefore(startTime.plusMinutes(selectedShowing.getMovie().getDuration())) && showing.getSafeEndTime().isAfter(startTime)) {
                             timeSlotAvailable = false;
                         }
                     }
 
                     if (timeSlotAvailable) {
                         database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).insertShowing(new Showing(
-                                new Movie(selectedTitle.getSelectionModel().getSelectedItem().toString()),
+                                database.getMovieByName(selectedTitle.getValue().toString()),
                                 startTime,
-                                selectedShowing.getDuration(),
-                                selectedShowing.getSeats(),
-                                selectedShowing.getPrice()
+                                selectedShowing.getSeats()
                         ));
                         refresh(database, roomOneTable, roomTwoTable);
                         rootPane.setBottom(null);

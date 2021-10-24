@@ -109,13 +109,13 @@ public class PurchaseStage extends Stage {
         seatsColumn.setCellValueFactory(showing -> new SimpleStringProperty(Integer.toString(showing.getValue().getSeats())));
 
         TableColumn<Showing, String> priceColumn = new TableColumn<>("Price");
-        priceColumn.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getPrice()));
+        priceColumn.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getMovie().getPrice()));
 
         TableColumn<Showing, String> startTimeColumn2 = new TableColumn<>("Start Time");
         startTimeColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().toString()));
 
         TableColumn<Showing, String> endTimeColumn2 = new TableColumn<>("End Time");
-        endTimeColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().plusMinutes(showing.getValue().getDuration()).toString()));
+        endTimeColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getStartTime().plusMinutes(showing.getValue().getMovie().getDuration()).toString()));
 
         TableColumn<Showing, String> titleColumn2 = new TableColumn<>("Title");
         titleColumn2.setCellValueFactory(showing -> new SimpleStringProperty(showing.getValue().getMovie().getTitle()));
@@ -124,7 +124,7 @@ public class PurchaseStage extends Stage {
         seatsColumn2.setCellValueFactory(showing -> new SimpleStringProperty(Integer.toString(showing.getValue().getSeats())));
 
         TableColumn<Showing, String> priceColumn2 = new TableColumn<>("Price");
-        priceColumn2.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getPrice()));
+        priceColumn2.setCellValueFactory(showing -> new SimpleStringProperty("€" + showing.getValue().getMovie().getPrice()));
 
         roomOneTable.getColumns().addAll(
                 startTimeColumn,
