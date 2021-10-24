@@ -175,9 +175,13 @@ public class ManageMoviesStage extends Stage {
                 if (price != null && price > 0) {
                     if (duration != null && duration > 0) {
                         if (!selectedTitle.getText().isEmpty()) {
-                            database.insertMovie(new Movie(selectedTitle.getText(), price, duration));
-                            refresh(database, movieTable);
-                            message.setText("");
+                            if (database.getMovieByName(selectedTitle.getText()) == null) {
+                                database.insertMovie(new Movie(selectedTitle.getText(), price, duration));
+                                refresh(database, movieTable);
+                                message.setText("");
+                            } else {
+                                message.setText("Movie title already exists");
+                            }
                         } else {
                             message.setText("Movie title cannot be empty");
                         }
