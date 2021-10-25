@@ -106,9 +106,9 @@ public class Database {
         for (int i = 0; i < movies.size(); i++) {
             LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1441058400 + random.nextInt(2678400), 0, ZoneOffset.UTC);
             if (i % 2 == 1) {
-                rooms.get(0).insertShowing(new Showing(movies.get(i), dateTime, 100));
+                rooms.get(0).insertShowing(new Showing(movies.get(i), dateTime, 100, 1));
             } else {
-                rooms.get(1).insertShowing(new Showing(movies.get(i), dateTime, 200));
+                rooms.get(1).insertShowing(new Showing(movies.get(i), dateTime, 200, 2));
             }
         }
     }

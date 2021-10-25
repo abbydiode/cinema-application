@@ -18,8 +18,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PurchaseStage extends Stage {
@@ -46,6 +50,7 @@ public class PurchaseStage extends Stage {
         MenuItem aboutButton = new MenuItem("About");
         MenuItem manageShowingsButton = new MenuItem("Manage Showings");
         MenuItem manageMoviesButton = new MenuItem("Manage Movies");
+        MenuItem exportButton = new MenuItem("Export to CSV");
 
         signOutMenu.getItems().add(signOutButton);
         helpMenu.getItems().add(aboutButton);
@@ -61,7 +66,8 @@ public class PurchaseStage extends Stage {
 
         adminMenu.getItems().addAll(
                 manageShowingsButton,
-                manageMoviesButton
+                manageMoviesButton,
+                exportButton
         );
 
         VBox topPane = new VBox(menuBar);
@@ -87,6 +93,33 @@ public class PurchaseStage extends Stage {
             public void handle(ActionEvent event) {
                 new ManageMoviesStage(app, user);
                 close();
+            }
+        });
+
+        exportButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ArrayList<Showing> showings = database.getRooms().get(0).getShowings();
+                showings.addAll(database.getRooms().get(1).getShowings());
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialFileName("showings.csv");
+                File file = fileChooser.showSaveDialog(null);
+                try {
+                    FileWriter writer = new FileWriter(file);
+                    for (Showing showing : showings) {
+                        writer.append(
+                                showing.getStartTime() + "," +
+                                showing.getEndTime() + "," +
+                                showing.getRoom() + "," +
+                                showing.getMovie().getTitle() + "," +
+                                showing.getSeats() + "," +
+                                showing.getMovie().getPrice() + "\n"
+                        );
+                    }
+                    writer.close();
+                } catch (IOException e) {
+
+                }
             }
         });
 

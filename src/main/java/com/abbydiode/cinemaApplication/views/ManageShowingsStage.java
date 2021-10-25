@@ -257,7 +257,8 @@ public class ManageShowingsStage extends Stage {
                         database.getRooms().get(selectedRoom.getSelectionModel().getSelectedIndex()).insertShowing(new Showing(
                                 database.getMovieByName(selectedTitle.getValue().toString()),
                                 startTime,
-                                selectedShowing.getSeats()
+                                selectedShowing.getSeats(),
+                                selectedRoom.getSelectionModel().getSelectedIndex() + 1
                         ));
                         refresh(database, roomOneTable, roomTwoTable);
                         rootPane.setBottom(null);

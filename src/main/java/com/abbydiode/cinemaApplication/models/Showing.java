@@ -6,11 +6,13 @@ public class Showing {
     private Movie movie;
     private LocalDateTime startTime;
     private int seats;
+    private int room;
 
-    public Showing(Movie movie, LocalDateTime startTime, int seats) {
+    public Showing(Movie movie, LocalDateTime startTime, int seats, int room) {
         this.movie = movie;
         this.startTime = startTime;
         this.seats = seats;
+        this.room = room;
     }
 
     public Movie getMovie() {
@@ -60,5 +62,12 @@ public class Showing {
         boolean canReserve = seats - amountToReserve >= 0;
         seats -= canReserve ? amountToReserve : 0;
         return canReserve;
+    }
+
+    /**
+     * @return The ID of the room
+     */
+    public int getRoom() {
+        return room;
     }
 }
