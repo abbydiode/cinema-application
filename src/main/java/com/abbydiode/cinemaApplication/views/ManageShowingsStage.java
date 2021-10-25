@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -277,6 +278,14 @@ public class ManageShowingsStage extends Stage {
             public void handle(ActionEvent event) {
                 Movie selectedMovie = database.getMovieByName(selectedTitle.getValue().toString());
                 selectedPrice.setText(Double.toString(selectedMovie.getPrice()));
+            }
+        });
+
+        setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                windowEvent.consume();
+                new CloseStage(ManageShowingsStage.this);
             }
         });
 

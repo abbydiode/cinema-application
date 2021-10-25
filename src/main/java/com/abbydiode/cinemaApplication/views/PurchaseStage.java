@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -291,6 +292,14 @@ public class PurchaseStage extends Stage {
                 } else {
                     message.setText("Name cannot be empty");
                 }
+            }
+        });
+
+        setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                windowEvent.consume();
+                new CloseStage(PurchaseStage.this);
             }
         });
 

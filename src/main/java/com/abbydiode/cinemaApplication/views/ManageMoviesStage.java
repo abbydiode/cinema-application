@@ -19,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 
@@ -191,6 +192,14 @@ public class ManageMoviesStage extends Stage {
                 } else {
                     message.setText("Invalid price");
                 }
+            }
+        });
+
+        setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                windowEvent.consume();
+                new CloseStage(ManageMoviesStage.this);
             }
         });
 
