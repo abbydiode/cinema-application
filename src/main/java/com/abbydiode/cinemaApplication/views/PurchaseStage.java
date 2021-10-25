@@ -141,6 +141,16 @@ public class PurchaseStage extends Stage {
                 priceColumn2
         );
 
+        TextField search = new TextField();
+
+        search.textProperty().addListener((observable, oldstring, newString) -> {
+            if (newString.length() > 1) {
+                refresh(database, roomOneTable, roomTwoTable, newString);
+            } else {
+                refresh(database, roomOneTable, roomTwoTable);
+            }
+        });
+
         refresh(database, roomOneTable, roomTwoTable);
 
         showingsGrid.setHgap(8);
@@ -148,8 +158,9 @@ public class PurchaseStage extends Stage {
         showingsGrid.setAlignment(Pos.CENTER);
         showingsGrid.add(roomOneLabel, 0, 0);
         showingsGrid.add(roomTwoLabel, 1, 0);
-        showingsGrid.add(roomOneTable, 0, 1);
-        showingsGrid.add(roomTwoTable, 1, 1);
+        showingsGrid.add(search, 0, 1);
+        showingsGrid.add(roomOneTable, 0, 2);
+        showingsGrid.add(roomTwoTable, 1, 2);
 
         GridPane purchaseForm = new GridPane();
         Label roomLabel = new Label("Room");
@@ -258,9 +269,9 @@ public class PurchaseStage extends Stage {
         show();
     }
 
-    private void refresh(Database database, TableView roomOneTable, TableView roomTwoTable) {
-        ArrayList<Showing> roomOneShowings = database.getRooms().get(0).getShowings();
-        ArrayList<Showing> roomTwoShowings = database.getRooms().get(1).getShowings();
+    private void refresh(Database database, TableView roomOneTable, TableView roomTwoTable, String query) {
+        ArrayList<Showing> roomOneShowings = query == null ? database.getRooms().get(0).getShowings() : database.getRooms().get(0).getShowingsByTitle(query);
+        ArrayList<Showing> roomTwoShowings = query == null ? database.getRooms().get(1).getShowings() : database.getRooms().get(1).getShowingsByTitle(query);
 
         roomOneTable.getItems().clear();
         roomTwoTable.getItems().clear();
@@ -272,5 +283,9 @@ public class PurchaseStage extends Stage {
         for (Showing roomTwoShowing : roomTwoShowings) {
             roomTwoTable.getItems().add(roomTwoShowing);
         }
+    }
+
+    private void refresh(Database database, TableView roomOneTable, TableView roomTwoTable) {
+        refresh(database, roomOneTable, roomTwoTable, null);
     }
 }
